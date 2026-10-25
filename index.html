@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS // Autonomous Productivity Workspace</title>
+  
+  <!-- Clear, Modern Typography: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Marked.js for Markdown Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#EFF6FF',
+              100: '#DBEAFE',
+              200: '#BFDBFE',
+              500: '#3B82F6',
+              600: '#2563EB',
+              700: '#1D4ED8',
+              800: '#1E40AF',
+              900: '#1E3A8A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Markdown Editor Content Styling */
+    .prose-nexus h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0F172A;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
+    .prose-nexus h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1E293B;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 0.35rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .prose-nexus h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2563EB;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .prose-nexus p {
+      margin-bottom: 0.75rem;
+      line-height: 1.65;
+      color: #334155;
+    }
+    .prose-nexus ul {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+      color: #334155;
+    }
+    .prose-nexus ol {
+      list-style-type: decimal;
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+      color: #334155;
+    }
+    .prose-nexus pre {
+      background: #0F172A;
+      color: #F8FAFC;
+      border-radius: 0.5rem;
+      padding: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.825rem;
+      overflow-x: auto;
+      margin: 0.85rem 0;
+    }
+    .prose-nexus code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #DBEAFE;
+      border-radius: 0.25rem;
+      padding: 0.15rem 0.35rem;
+      font-size: 0.85rem;
+    }
+    .prose-nexus blockquote {
+      border-left: 3px solid #3B82F6;
+      background: #EFF6FF;
+      padding: 0.5rem 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      color: #1E40AF;
+      font-style: italic;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- TOP TELEMETRY & NAVIGATION BAR (RULE OF THIRDS ALIGNMENT)                 -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Left Anchor (1/3 Left Alignment) -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-sm shadow-sm shadow-blue-500/20">
+          N
+        </div>
+        <div>
+          <span class="font-extrabold text-base tracking-tight text-slate-900">NEXUS</span>
+          <span class="text-xs font-semibold text-blue-600 ml-1.5 px-2 py-0.5 bg-blue-50 rounded-full border border-blue-100">WORKSPACE</span>
+        </div>
+        <div class="hidden md:flex items-center gap-2 pl-3 border-l border-slate-200 text-xs font-mono text-slate-500">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="systemClock" class="font-semibold text-slate-700">--:--:--</span>
+        </div>
+      </div>
+
+      <!-- Center Focal Point: Dynamic Time-Cadence Switcher -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium">
+        <button onclick="setSimulatedView('auto')" id="timeBtn-auto" class="px-3 py-1.5 rounded-lg bg-white text-blue-600 font-semibold shadow-sm transition-all">
+          Auto Clock
+        </button>
+        <button onclick="setSimulatedView('morning')" id="timeBtn-morning" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          06-12 Morning
+        </button>
+        <button onclick="setSimulatedView('afternoon')" id="timeBtn-afternoon" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          12-18 Afternoon
+        </button>
+        <button onclick="setSimulatedView('evening')" id="timeBtn-evening" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          18-24 Evening
+        </button>
+      </div>
+
+      <!-- Right Anchor: Quick-Capture Trigger -->
+      <div class="flex items-center gap-2">
+        <button onclick="openQuickCapture()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg flex items-center gap-2 shadow-sm shadow-blue-600/20 transition-all">
+          <span>⚡ Quick Capture</span>
+          <kbd class="bg-blue-700/60 text-blue-100 px-1.5 py-0.5 rounded text-[10px] font-mono">Ctrl+Space</kbd>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MASTER NATURAL LANGUAGE PARSER BAR (HERO FOCAL PLANE)                      -->
+  <!-- ========================================================================= -->
+  <section class="bg-white border-b border-slate-200 py-4 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
+        
+        <!-- Rule of Thirds Proportion: 9 cols for input (~2/3+), 3 cols for action (1/3) -->
+        <div class="lg:col-span-9 relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            id="masterInput"
+            placeholder='Natural Language: "Code Python at 3pm #dev !high 45m" or "Deploy release at 16:30 #ops"' 
+            class="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-transparent transition-all placeholder:text-slate-400 font-medium"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="lg:col-span-3 flex items-center gap-2">
+          <button onclick="handleMasterSubmit()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-sm shadow-blue-500/20 flex items-center justify-center gap-1.5 transition-all">
+            <span>Schedule Task</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Live JSON Smart-Parsing Extraction Telemetry Badge -->
+      <div id="parseTelemetry" class="mt-2.5 flex items-center gap-2 text-xs font-mono text-slate-600">
+        <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-bold border border-blue-200 text-[11px]">
+          LIVE PARSER:
+        </span>
+        <span id="telemetryContent" class="text-slate-500 truncate">
+          Type natural language query above...
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- PRIMARY APP NAVIGATION TABS                                               -->
+  <!-- ========================================================================= -->
+  <nav class="bg-white border-b border-slate-200 px-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between text-xs font-semibold">
+      <div class="flex items-center space-x-1">
+        <button onclick="switchAppView('dynamic')" id="navTab-dynamic" class="py-3 px-4 text-blue-600 border-b-2 border-blue-600 font-bold flex items-center gap-2 transition-all">
+          <span>⚡ Time-Aware Cadence</span>
+        </button>
+        <button onclick="switchAppView('database')" id="navTab-database" class="py-3 px-4 text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all">
+          <span>⊞ Unified Database</span>
+        </button>
+        <button onclick="switchAppView('timeline')" id="navTab-timeline" class="py-3 px-4 text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all">
+          <span>▥ Autonomous Timeline</span>
+        </button>
+        <button onclick="switchAppView('documents')" id="navTab-documents" class="py-3 px-4 text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all">
+          <span>📄 Document Tree</span>
+        </button>
+      </div>
+
+      <div class="hidden md:flex items-center gap-2 text-xs font-medium text-slate-500 py-2">
+        <span>Active State:</span>
+        <span id="currentModeLabel" class="font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
+          Morning Focus (Top 3)
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- RULE OF THIRDS WORKSPACE: TIME-AWARE VIEW (1/3 INSIGHTS + 2/3 EXECUTION)  -->
+  <!-- ========================================================================= -->
+  <main id="view-dynamic" class="flex-1 max-w-7xl mx-auto w-full p-6">
+    
+    <!-- Rule of Thirds Grid: Left 1/3 (Col 4) | Right 2/3 (Col 8) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- ===================================================================== -->
+      <!-- LEFT 1/3 COLUMN: CONTEXT, VELOCITY & CADENCE INTENTIONS               -->
+      <!-- ===================================================================== -->
+      <aside class="lg:col-span-4 space-y-5">
+        
+        <!-- Dynamic Header Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Active Window</span>
+            <span id="windowBadge" class="text-xs font-mono font-semibold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full border border-blue-100">
+              06:00 - 12:00
+            </span>
+          </div>
+
+          <div>
+            <h1 id="dynamicTitle" class="text-xl font-extrabold text-slate-900 tracking-tight">
+              Morning Focus
+            </h1>
+            <p id="dynamicSubtitle" class="text-xs text-slate-500 mt-1.5 leading-relaxed">
+              Cognitive bandwidth allocation. Distractions eliminated. Showing top 3 high-impact objectives.
+            </p>
+          </div>
+
+          <button onclick="triggerAutonomousScheduler()" class="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
+            <span>⚡ Auto-Schedule All Tasks</span>
+          </button>
+        </div>
+
+        <!-- Productivity Scorecard (Rule of Thirds Metrics) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-900 uppercase">
+            <span>Productivity Velocity</span>
+            <span id="statVelocity" class="text-blue-600 font-extrabold text-sm">0%</span>
+          </div>
+          
+          <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+            <div id="statProgressBar" class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
+            <div class="p-2 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="block text-slate-400 text-[10px] uppercase font-bold">Total</span>
+              <span id="statTotalTasks" class="text-sm font-extrabold text-slate-800">0</span>
+            </div>
+            <div class="p-2 bg-blue-50/50 rounded-xl border border-blue-100">
+              <span class="block text-blue-500 text-[10px] uppercase font-bold">Active</span>
+              <span id="statInProgress" class="text-sm font-extrabold text-blue-700">0</span>
+            </div>
+            <div class="p-2 bg-emerald-50/50 rounded-xl border border-emerald-100">
+              <span class="block text-emerald-500 text-[10px] uppercase font-bold">Done</span>
+              <span id="statCompleted" class="text-sm font-extrabold text-emerald-700">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Productivity Tips -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-4 text-xs space-y-2">
+          <div class="font-bold text-blue-900 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Deep Work Protocol</span>
+          </div>
+          <p class="text-blue-700/80 leading-relaxed text-[11px]">
+            Press <kbd class="bg-white text-blue-800 px-1.5 py-0.5 rounded border border-blue-200 font-mono">Ctrl+Space</kbd> anytime to capture ideas instantly without breaking flow state.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- ===================================================================== -->
+      <!-- RIGHT 2/3 COLUMN: ACTIVE WORKSPACE & EXECUTION SURFACE               -->
+      <!-- ===================================================================== -->
+      <section class="lg:col-span-8 space-y-4">
+        <div id="dynamicBody"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW CONTAINER: UNIFIED DATABASE ENGINE (TABLE / KANBAN / LIST)           -->
+  <!-- ========================================================================= -->
+  <main id="view-database" class="flex-1 max-w-7xl mx-auto w-full p-6 hidden">
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 mb-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-medium">
+        <button onclick="setDatabaseLayout('table')" id="dbBtn-table" class="px-3.5 py-1.5 rounded-lg bg-white text-blue-600 font-bold shadow-sm transition-all">
+          ⊞ Data Table
+        </button>
+        <button onclick="setDatabaseLayout('kanban')" id="dbBtn-kanban" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          ▥ Kanban Board
+        </button>
+        <button onclick="setDatabaseLayout('list')" id="dbBtn-list" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+          ☰ Simple List
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="dbSearchInput" 
+            oninput="renderDatabaseView()" 
+            placeholder="Filter records or #tags..." 
+            class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white w-56 font-medium text-slate-800"
+          />
+        </div>
+        <button onclick="openNewTaskModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-sm shadow-blue-500/20 transition-all">
+          + New Record
+        </button>
+      </div>
+    </div>
+
+    <div id="databaseOutput"></div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW CONTAINER: AUTONOMOUS TIME-BLOCKING TIMELINE                         -->
+  <!-- ========================================================================= -->
+  <main id="view-timeline" class="flex-1 max-w-7xl mx-auto w-full p-6 hidden">
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Autonomous Daily Time-Blocking</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Tasks with extracted time parameters map automatically to the 24h schedule.</p>
+      </div>
+      <button onclick="triggerAutonomousScheduler()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2 px-4 rounded-xl shadow-sm shadow-blue-500/20 transition-all">
+        ⚡ Auto-Pack Remaining Slots
+      </button>
+    </div>
+
+    <div id="timelineGrid" class="space-y-2"></div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW CONTAINER: NESTED DOCUMENTS (RULE OF THIRDS: 1/3 TREE + 2/3 EDITOR)   -->
+  <!-- ========================================================================= -->
+  <main id="view-documents" class="flex-1 max-w-7xl mx-auto w-full p-6 hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- 1/3 Left Column: Infinite Nested Hierarchy Tree -->
+      <aside class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col min-h-[550px]">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+          <span class="text-xs font-bold text-slate-900 uppercase">Documents Tree</span>
+          <button onclick="createNewDocument(null)" class="text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition-all">
+            + Root Page
+          </button>
+        </div>
+        <div id="documentTreeContainer" class="flex-1 overflow-y-auto space-y-1 text-xs"></div>
+      </aside>
+
+      <!-- 2/3 Right Column: Markdown Editor & Live Preview -->
+      <section class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl shadow-sm flex flex-col overflow-hidden">
+        <div class="border-b border-slate-100 px-5 py-3 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50">
+          <div class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
+            <span class="text-slate-400">Path:</span>
+            <span id="docBreadcrumb" class="font-bold text-slate-800">Workspace / Untitled</span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <div class="flex items-center bg-slate-100 p-0.5 rounded-lg text-xs font-medium">
+              <button onclick="setDocEditorMode('split')" id="docTab-split" class="px-2.5 py-1 rounded-md bg-white text-blue-600 font-bold shadow-sm">
+                Split
+              </button>
+              <button onclick="setDocEditorMode('edit')" id="docTab-edit" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900">
+                Write
+              </button>
+              <button onclick="setDocEditorMode('preview')" id="docTab-preview" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900">
+                Preview
+              </button>
+            </div>
+            <button onclick="saveActiveDocument()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3 py-1.5 rounded-lg shadow-sm transition-all ml-1">
+              Save
+            </button>
+          </div>
+        </div>
+
+        <div class="px-5 pt-4 pb-2 border-b border-slate-100">
+          <input 
+            type="text" 
+            id="docTitleInput" 
+            oninput="handleDocTitleChange()"
+            class="w-full text-xl font-extrabold text-slate-900 placeholder:text-slate-300 focus:outline-none"
+            placeholder="Document Title..."
+          />
+        </div>
+
+        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100 min-h-[450px]">
+          <div id="docWritePane" class="p-4 flex flex-col">
+            <textarea 
+              id="docContentTextarea" 
+              oninput="handleDocContentChange()"
+              class="w-full flex-1 bg-transparent text-slate-800 font-mono text-xs focus:outline-none resize-none leading-relaxed"
+              placeholder="# Enter Markdown text here...&#10;&#10;Use ## headers, - lists, `code`, and **bold** formatting."
+            ></textarea>
+          </div>
+          <div id="docPreviewPane" class="p-5 overflow-y-auto prose-nexus">
+            <div id="docRenderedOutput"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: NATIVE FOCUS ENGINE (FULLSCREEN POMODORO WITH CLEAN BLUE ACCENTS)  -->
+  <!-- ========================================================================= -->
+  <div id="focusModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6 hidden">
+    <div class="absolute top-6 right-6">
+      <button onclick="exitFocusEngine()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all border border-white/10">
+        Exit Deep Work [Esc]
+      </button>
+    </div>
+
+    <div class="max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl text-center space-y-6">
+      <div>
+        <span class="text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-100">
+          Active Deep Work Sprint
+        </span>
+        <h2 id="focusTaskTitle" class="text-xl font-extrabold text-slate-900 mt-3 leading-snug">
+          System Execution
+        </h2>
+        <div class="flex items-center justify-center gap-2 mt-2 font-mono text-xs">
+          <span id="focusTaskTag" class="text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md font-semibold">#dev</span>
+          <span id="focusTaskPriority" class="text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md font-bold">P1</span>
+        </div>
+      </div>
+
+      <div class="py-6 px-4 bg-slate-50 border border-slate-100 rounded-2xl">
+        <div id="focusTimerDisplay" class="text-6xl md:text-7xl font-extrabold font-mono text-slate-900 tracking-tight">
+          25:00
+        </div>
+        <div class="text-xs font-medium text-slate-400 mt-2">
+          Status: <span id="focusTimerState" class="text-blue-600 font-bold">Ready</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+        <button id="focusToggleBtn" onclick="toggleFocusTimer()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl shadow-md shadow-blue-500/20 transition-all">
+          Start Timer
+        </button>
+        <button onclick="resetFocusTimer()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl transition-all">
+          Reset (25m)
+        </button>
+        <button onclick="addFiveMinutesFocus()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl transition-all">
+          +5 Minutes
+        </button>
+        <button onclick="completeFocusTask()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl shadow-sm transition-all">
+          ✓ Complete Task
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: QUICK-CAPTURE ACCELERATOR (CTRL+SPACE TRIGGER)                     -->
+  <!-- ========================================================================= -->
+  <div id="quickCaptureModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-xl p-6 shadow-2xl border border-slate-100 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+          <span class="text-xs font-extrabold text-slate-900 uppercase">Quick-Capture Engine</span>
+        </div>
+        <button onclick="closeQuickCapture()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2 py-1 rounded">
+          ✕ Esc
+        </button>
+      </div>
+
+      <input 
+        type="text" 
+        id="quickCaptureInput"
+        placeholder='e.g. "Review architecture draft at 2pm #dev !high 30m"'
+        class="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white font-medium"
+        autocomplete="off"
+      />
+
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 font-mono text-xs flex items-center justify-between text-slate-600">
+        <div id="quickCapturePreview" class="truncate max-w-[380px]">Parser standby...</div>
+        <span class="text-[10px] text-slate-400 font-sans">Press [Enter] to schedule</span>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeQuickCapture()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+          Cancel
+        </button>
+        <button onclick="handleQuickCaptureSubmit()" class="px-5 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm shadow-blue-500/20 transition-all">
+          Commit Record →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: TASK FORM RECORD (CREATE / EDIT)                                   -->
+  <!-- ========================================================================= -->
+  <div id="taskModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl border border-slate-100 text-xs">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <span class="font-extrabold text-sm text-slate-900">Task Information</span>
+        <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+      </div>
+
+      <form id="taskForm" onsubmit="handleTaskFormSubmit(event)" class="space-y-4">
+        <input type="hidden" id="taskFormId" />
+        <div>
+          <label class="block mb-1 font-bold text-slate-700">TITLE:</label>
+          <input type="text" id="taskFormTitle" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block mb-1 font-bold text-slate-700">TAG (#):</label>
+            <input type="text" id="taskFormTag" placeholder="dev, ops, design" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium" />
+          </div>
+          <div>
+            <label class="block mb-1 font-bold text-slate-700">SCHEDULED TIME (HH:MM):</label>
+            <input type="text" id="taskFormTime" placeholder="14:00" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block mb-1 font-bold text-slate-700">STATUS:</label>
+            <select id="taskFormStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium">
+              <option value="todo">To-Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Completed</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1 font-bold text-slate-700">PRIORITY:</label>
+            <select id="taskFormPriority" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium">
+              <option value="P1">P1 (Critical)</option>
+              <option value="P2">P2 (Normal)</option>
+              <option value="P3">P3 (Low)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-1 font-bold text-slate-700">PROOF NOTES / EVIDENCE LOG:</label>
+          <textarea id="taskFormProof" rows="2" placeholder="Link to PR, deployment hash, screenshot notes..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none text-slate-900 font-medium"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeTaskModal()" class="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VANILLA JAVASCRIPT APPLICATION CORE                                       -->
+  <!-- ========================================================================= -->
+  <script>
+    const state = {
+      appView: 'dynamic',
+      simulatedTime: 'auto',
+      databaseLayout: 'table',
+      tasks: [],
+      pages: [],
+      activePageId: null,
+      activeDocEditorMode: 'split',
+      focusActiveTask: null,
+      focusDurationSeconds: 25 * 60,
+      focusTimeRemaining: 25 * 60,
+      focusTimerInterval: null,
+      focusIsRunning: false
+    };
+
+    const API_BASE = window.location.origin;
+
+    // Client-side NLP Parser
+    function parseNaturalLanguageClient(text) {
+      let working = text.trim();
+      let tag = 'general';
+      let priority = 'P2';
+      let duration = 30;
+      let scheduledTime = null;
+
+      const tagMatch = working.match(/#([a-zA-Z0-9_\-]+)/);
+      if (tagMatch) {
+        tag = tagMatch[1].toLowerCase();
+        working = working.replace(/#[a-zA-Z0-9_\-]+/, '');
+      }
+
+      const prioMatch = working.match(/!(p[1-3]|high|med|medium|low)/i);
+      if (prioMatch) {
+        const p = prioMatch[1].toLowerCase();
+        priority = (p === 'p1' || p === 'high') ? 'P1' : ((p === 'p3' || p === 'low') ? 'P3' : 'P2');
+        working = working.replace(/!(p[1-3]|high|med|medium|low)/i, '');
+      }
+
+      const durMatch = working.match(/(\d+)\s*(m|min|mins|h|hr|hours)\b/i);
+      if (durMatch) {
+        const val = parseInt(durMatch[1], 10);
+        duration = durMatch[2].toLowerCase().startsWith('h') ? val * 60 : val;
+        working = working.replace(/(\d+)\s*(m|min|mins|h|hr|hours)\b/i, '');
+      }
+
+      const time12Match = working.match(/(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i);
+      if (time12Match) {
+        let hour = parseInt(time12Match[1], 10);
+        let min = time12Match[2] ? parseInt(time12Match[2], 10) : 0;
+        let meridiem = time12Match[3].toLowerCase();
+        if (meridiem === 'pm' && hour !== 12) hour += 12;
+        if (meridiem === 'am' && hour === 12) hour = 0;
+        scheduledTime = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+        working = working.replace(/(?:at\s+)?\d{1,2}(?::\d{2})?\s*(am|pm)\b/i, '');
+      } else {
+        const time24Match = working.match(/(?:at\s+)?([01]?\d|2[0-3]):([0-5]\d)\b/i);
+        if (time24Match) {
+          scheduledTime = `${String(parseInt(time24Match[1], 10)).padStart(2, '0')}:${time24Match[2]}`;
+          working = working.replace(/(?:at\s+)?[01]?\d|2[0-3]:[0-5]\d\b/i, '');
+        }
+      }
+
+      return {
+        title: working.replace(/\s+/g, ' ').trim() || 'Untitled Task',
+        scheduled_time: scheduledTime,
+        tag,
+        priority,
+        duration_minutes: duration
+      };
+    }
+
+    const masterInput = document.getElementById('masterInput');
+    const telemetryContent = document.getElementById('telemetryContent');
+
+    masterInput.addEventListener('input', () => {
+      const val = masterInput.value;
+      if (!val.trim()) {
+        telemetryContent.textContent = 'Type natural language query above...';
+        return;
+      }
+      const parsed = parseNaturalLanguageClient(val);
+      telemetryContent.innerHTML = `
+        <span class="font-bold text-slate-800">Title:</span> "${escapeHtml(parsed.title)}" |
+        <span class="font-bold text-blue-600">Time:</span> ${parsed.scheduled_time || 'None'} |
+        <span class="font-bold text-slate-800">Tag:</span> #${parsed.tag} |
+        <span class="font-bold text-slate-800">Prio:</span> ${parsed.priority}
+      `;
+    });
+
+    masterInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleMasterSubmit();
+    });
+
+    const quickInput = document.getElementById('quickCaptureInput');
+    const quickPreview = document.getElementById('quickCapturePreview');
+
+    quickInput.addEventListener('input', () => {
+      const val = quickInput.value;
+      if (!val.trim()) {
+        quickPreview.textContent = 'Parser standby...';
+        return;
+      }
+      const parsed = parseNaturalLanguageClient(val);
+      quickPreview.innerHTML = `{"title": "${escapeHtml(parsed.title)}", "time": "${parsed.scheduled_time || 'null'}", "tag": "${parsed.tag}", "priority": "${parsed.priority}"}`;
+    });
+
+    quickInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleQuickCaptureSubmit();
+    });
+
+    // Global Key Listener: Ctrl+Space / Cmd+Space & Escape
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.code === 'Space') {
+        e.preventDefault();
+        openQuickCapture();
+      }
+      if (e.key === 'Escape') {
+        if (!document.getElementById('quickCaptureModal').classList.contains('hidden')) {
+          closeQuickCapture();
+        } else if (!document.getElementById('focusModal').classList.contains('hidden')) {
+          exitFocusEngine();
+        } else if (!document.getElementById('taskModal').classList.contains('hidden')) {
+          closeTaskModal();
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        if (state.appView === 'documents') {
+          e.preventDefault();
+          saveActiveDocument();
+        }
+      }
+    });
+
+    async function initApp() {
+      startClock();
+      await fetchTasks();
+      await fetchPages();
+      renderAllViews();
+    }
+
+    async function fetchTasks() {
+      try {
+        const res = await fetch(`${API_BASE}/api/tasks`);
+        if (res.ok) state.tasks = await res.json();
+      } catch (err) {
+        console.warn('API fetch tasks error, running local state:', err);
+      }
+    }
+
+    async function fetchPages() {
+      try {
+        const res = await fetch(`${API_BASE}/api/pages?tree=true`);
+        if (res.ok) {
+          state.pages = await res.json();
+          if (!state.activePageId && state.pages.length > 0) {
+            state.activePageId = state.pages[0].id;
+          }
+        }
+      } catch (err) {
+        console.warn('API fetch pages error:', err);
+      }
+    }
+
+    function getActiveHour() {
+      if (state.simulatedTime === 'morning') return 9;
+      if (state.simulatedTime === 'afternoon') return 14;
+      if (state.simulatedTime === 'evening') return 19;
+      return new Date().getHours();
+    }
+
+    function getDynamicViewMode() {
+      const hour = getActiveHour();
+      if (hour >= 6 && hour < 12) return 'morning';
+      if (hour >= 12 && hour < 18) return 'afternoon';
+      return 'evening';
+    }
+
+    function setSimulatedView(mode) {
+      state.simulatedTime = mode;
+      ['auto', 'morning', 'afternoon', 'evening'].forEach(m => {
+        const btn = document.getElementById(`timeBtn-${m}`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = "px-3 py-1.5 rounded-lg bg-white text-blue-600 font-semibold shadow-sm transition-all";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+          }
+        }
+      });
+      renderAllViews();
+    }
+
+    // Dynamic View with Rule of Thirds
+    function renderDynamicView() {
+      const mode = getDynamicViewMode();
+      const titleEl = document.getElementById('dynamicTitle');
+      const subtitleEl = document.getElementById('dynamicSubtitle');
+      const modeLabel = document.getElementById('currentModeLabel');
+      const windowBadge = document.getElementById('windowBadge');
+      const bodyEl = document.getElementById('dynamicBody');
+
+      const total = state.tasks.length;
+      const inProg = state.tasks.filter(t => t.status === 'in_progress').length;
+      const done = state.tasks.filter(t => t.status === 'done').length;
+      const velocity = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      document.getElementById('statTotalTasks').textContent = total;
+      document.getElementById('statInProgress').textContent = inProg;
+      document.getElementById('statCompleted').textContent = done;
+      document.getElementById('statVelocity').textContent = `${velocity}%`;
+      document.getElementById('statProgressBar').style.width = `${velocity}%`;
+
+      if (mode === 'morning') {
+        titleEl.textContent = 'Morning Focus';
+        subtitleEl.textContent = 'Maximum cognitive bandwidth. Distractions removed. Showing top 3 high-impact priorities.';
+        modeLabel.textContent = 'Morning Focus (Top 3)';
+        windowBadge.textContent = '06:00 - 12:00';
+
+        const top3 = state.tasks.filter(t => t.status !== 'done').slice(0, 3);
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between pb-1">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Top 3 Focus Objectives</span>
+              <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">Deep Work</span>
+            </div>
+
+            ${top3.length === 0 ? '<div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-400 font-medium">No pending tasks. Press Ctrl+Space to create one.</div>' : ''}
+
+            ${top3.map((task, idx) => `
+              <div class="bg-white border border-slate-200 hover:border-blue-300 rounded-2xl p-5 shadow-sm transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-extrabold text-xs">
+                    0${idx + 1}
+                  </span>
+                  <div>
+                    <h3 class="font-bold text-slate-900 text-base">${escapeHtml(task.title)}</h3>
+                    <div class="flex items-center gap-2 mt-2 text-xs font-medium">
+                      <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md border border-blue-100">#${task.tag}</span>
+                      <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-bold">${task.priority}</span>
+                      <span class="text-slate-500 font-mono">${task.scheduled_time ? '⏰ ' + task.scheduled_time : 'Unscheduled'}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="launchFocusEngine('${task.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-sm shadow-blue-500/20 transition-all">
+                    ⚡ Focus
+                  </button>
+                  <button onclick="advanceTaskStatus('${task.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-xl transition-all">
+                    ✓ Advance
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (mode === 'afternoon') {
+        titleEl.textContent = 'Afternoon Execution';
+        subtitleEl.textContent = 'Peak execution throughput. Kanban orchestration and autonomous timeline packing active.';
+        modeLabel.textContent = 'Afternoon Execution';
+        windowBadge.textContent = '12:00 - 18:00';
+
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between pb-1">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Execution Kanban Board</span>
+              <span class="text-xs font-medium text-slate-500">${state.tasks.length} total tasks</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              ${renderKanbanColumn('To-Do', 'todo', state.tasks.filter(t => t.status === 'todo'))}
+              ${renderKanbanColumn('In Progress', 'in_progress', state.tasks.filter(t => t.status === 'in_progress'))}
+              ${renderKanbanColumn('Completed', 'done', state.tasks.filter(t => t.status === 'done'))}
+            </div>
+          </div>
+        `;
+      } else {
+        titleEl.textContent = 'Evening Review';
+        subtitleEl.textContent = 'Reflective closure. Inspect completed outputs, review screenshot proof notes, and tally velocity.';
+        modeLabel.textContent = 'Evening Review';
+        windowBadge.textContent = '18:00 - 24:00';
+
+        const completedTasks = state.tasks.filter(t => t.status === 'done');
+        bodyEl.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between pb-1">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">Completed Tasks & Evidence Log</span>
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">${completedTasks.length} Done</span>
+            </div>
+
+            <div class="space-y-3">
+              ${completedTasks.length === 0 ? '<div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-400">No completed tasks yet.</div>' : ''}
+              ${completedTasks.map(t => `
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-900">${escapeHtml(t.title)}</span>
+                    <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-bold px-2 py-0.5 rounded-full">✓ Verified</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] font-medium">#${t.tag}</span>
+                    <span>Priority: ${t.priority}</span>
+                    <span>Completed: ${t.completed_at ? t.completed_at.slice(11, 19) : 'Today'}</span>
+                  </div>
+                  <div class="border-t border-slate-100 pt-2 flex items-center justify-between text-xs">
+                    <span class="text-slate-600 italic text-[11px]">${t.proof_notes ? 'Proof: ' + escapeHtml(t.proof_notes) : 'No evidence notes attached.'}</span>
+                    <button onclick="promptEditProof('${t.id}')" class="text-blue-600 hover:text-blue-700 font-semibold text-[11px]">
+                      + Add Evidence
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Unified Database Views
+    function setDatabaseLayout(layout) {
+      state.databaseLayout = layout;
+      ['table', 'kanban', 'list'].forEach(l => {
+        const btn = document.getElementById(`dbBtn-${l}`);
+        if (btn) {
+          if (l === layout) {
+            btn.className = "px-3.5 py-1.5 rounded-lg bg-white text-blue-600 font-bold shadow-sm transition-all";
+          } else {
+            btn.className = "px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+          }
+        }
+      });
+      renderDatabaseView();
+    }
+
+    function renderDatabaseView() {
+      const container = document.getElementById('databaseOutput');
+      const query = (document.getElementById('dbSearchInput')?.value || '').toLowerCase();
+      const filtered = state.tasks.filter(t => t.title.toLowerCase().includes(query) || t.tag.toLowerCase().includes(query));
+
+      if (state.databaseLayout === 'table') {
+        container.innerHTML = `
+          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 font-bold">
+                  <th class="p-3.5 w-32">Status</th>
+                  <th class="p-3.5">Task Title</th>
+                  <th class="p-3.5 w-28">Tag</th>
+                  <th class="p-3.5 w-28">Schedule</th>
+                  <th class="p-3.5 w-24">Priority</th>
+                  <th class="p-3.5 text-right w-44">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${filtered.length === 0 ? '<tr><td colspan="6" class="p-8 text-center text-slate-400">No records found.</td></tr>' : ''}
+                ${filtered.map(t => `
+                  <tr class="hover:bg-slate-50/70 transition-all">
+                    <td class="p-3.5">
+                      <button onclick="advanceTaskStatus('${t.id}')" class="px-2 py-0.5 rounded-md text-[11px] font-bold ${t.status === 'done' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (t.status === 'in_progress' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700 border border-slate-200')}">
+                        ${t.status === 'done' ? 'Completed' : (t.status === 'in_progress' ? 'In Progress' : 'To-Do')}
+                      </button>
+                    </td>
+                    <td class="p-3.5 font-bold text-slate-900">${escapeHtml(t.title)}</td>
+                    <td class="p-3.5"><span class="text-blue-600 font-semibold">#${t.tag}</span></td>
+                    <td class="p-3.5 font-mono text-slate-600">${t.scheduled_time || '—'}</td>
+                    <td class="p-3.5"><span class="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">${t.priority}</span></td>
+                    <td class="p-3.5 text-right space-x-1.5">
+                      <button onclick="launchFocusEngine('${t.id}')" class="text-blue-600 hover:text-blue-700 font-semibold px-2 py-1 rounded bg-blue-50">Focus</button>
+                      <button onclick="openEditTaskModal('${t.id}')" class="text-slate-600 hover:text-slate-800 font-medium px-2 py-1 rounded hover:bg-slate-100">Edit</button>
+                      <button onclick="deleteTaskRecord('${t.id}')" class="text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50">Del</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (state.databaseLayout === 'kanban') {
+        container.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${renderKanbanColumn('To-Do', 'todo', filtered.filter(t => t.status === 'todo'))}
+            ${renderKanbanColumn('In Progress', 'in_progress', filtered.filter(t => t.status === 'in_progress'))}
+            ${renderKanbanColumn('Completed', 'done', filtered.filter(t => t.status === 'done'))}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+            ${filtered.length === 0 ? '<div class="p-8 text-center text-slate-400 text-xs">No tasks found.</div>' : ''}
+            ${filtered.map(t => `
+              <div class="p-4 flex items-center justify-between text-xs hover:bg-slate-50 transition-all">
+                <div class="flex items-center gap-3">
+                  <button onclick="advanceTaskStatus('${t.id}')" class="w-5 h-5 rounded-md border border-slate-300 flex items-center justify-center font-bold ${t.status === 'done' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-transparent'}">
+                    ✓
+                  </button>
+                  <span class="${t.status === 'done' ? 'line-through text-slate-400 font-normal' : 'font-bold text-slate-900'}">
+                    ${escapeHtml(t.title)}
+                  </span>
+                  <span class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-[11px] font-semibold">#${t.tag}</span>
+                  ${t.scheduled_time ? `<span class="text-slate-500 font-mono text-[11px]">⏰ ${t.scheduled_time}</span>` : ''}
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="launchFocusEngine('${t.id}')" class="text-blue-600 hover:text-blue-700 font-semibold px-2 py-1 rounded bg-blue-50">Focus</button>
+                  <button onclick="deleteTaskRecord('${t.id}')" class="text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded">Del</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function renderKanbanColumn(title, statusKey, items) {
+      return `
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3 text-xs">
+            <span class="font-bold text-slate-900">${title}</span>
+            <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full text-[11px]">${items.length}</span>
+          </div>
+          <div class="space-y-3 flex-1 min-h-[300px]">
+            ${items.length === 0 ? '<div class="p-6 text-center text-slate-400 text-xs font-medium">No items in column</div>' : ''}
+            ${items.map(t => `
+              <div class="bg-slate-50/70 border border-slate-200/80 hover:border-blue-300 rounded-xl p-3 space-y-2 text-xs transition-all">
+                <div class="font-bold text-slate-900 leading-snug">${escapeHtml(t.title)}</div>
+                <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <span class="text-blue-600 font-semibold">#${t.tag}</span>
+                  <span class="bg-white text-slate-600 px-1.5 py-0.2 rounded border border-slate-200 font-bold">${t.priority}</span>
+                  ${t.scheduled_time ? `<span class="text-slate-500 font-mono">⏰ ${t.scheduled_time}</span>` : ''}
+                </div>
+                <div class="border-t border-slate-200/60 pt-2 flex items-center justify-between text-[11px]">
+                  <button onclick="launchFocusEngine('${t.id}')" class="text-blue-600 hover:text-blue-700 font-semibold">⚡ Focus</button>
+                  <button onclick="advanceTaskStatus('${t.id}')" class="text-slate-600 hover:text-slate-900 font-semibold">Advance →</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Timeline Rendering
+    function renderTimelineGrid() {
+      const container = document.getElementById('timelineGrid');
+      if (!container) return;
+      const hours = Array.from({ length: 18 }, (_, i) => `${String(i + 6).padStart(2, '0')}:00`);
+      const tasksByHour = {};
+      hours.forEach(h => tasksByHour[h] = []);
+
+      state.tasks.forEach(t => {
+        if (t.scheduled_time) {
+          const slot = `${t.scheduled_time.split(':')[0]}:00`;
+          if (tasksByHour[slot]) tasksByHour[slot].push(t);
+        }
+      });
+
+      const currentHour = new Date().getHours();
+      container.innerHTML = hours.map(h => {
+        const hourNum = parseInt(h.split(':')[0], 10);
+        const isCurrent = hourNum === currentHour;
+        const slotted = tasksByHour[h];
+
+        return `
+          <div class="bg-white border ${isCurrent ? 'border-blue-400 ring-2 ring-blue-100' : 'border-slate-200'} rounded-xl p-3 text-xs flex flex-col md:flex-row md:items-center gap-3 shadow-sm transition-all">
+            <div class="w-20 font-bold font-mono text-slate-700 flex items-center justify-between">
+              <span>${h}</span>
+              ${isCurrent ? '<span class="text-[9px] bg-blue-600 text-white px-1.5 py-0.2 rounded-full font-sans font-bold">Now</span>' : ''}
+            </div>
+            <div class="flex-1 flex flex-wrap items-center gap-2">
+              ${slotted.length === 0 ? '<span class="text-slate-400 italic text-[11px]">— Open Slot —</span>' : ''}
+              ${slotted.map(t => `
+                <div class="bg-blue-50 border border-blue-200 text-blue-900 px-3 py-1 rounded-lg flex items-center gap-2">
+                  <span class="font-bold">${escapeHtml(t.title)}</span>
+                  <span class="text-blue-600 text-[10px]">#${t.tag}</span>
+                  <button onclick="launchFocusEngine('${t.id}')" class="text-blue-700 hover:text-blue-900 font-bold">⚡</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function triggerAutonomousScheduler() {
+      try {
+        const res = await fetch(`${API_BASE}/api/timeline/auto-schedule`, { method: 'POST' });
+        if (res.ok) {
+          const result = await res.json();
+          alert(`⚡ Autonomous Scheduler: Packed ${result.allocated_count} tasks into open slots.`);
+          await fetchTasks();
+          renderAllViews();
+        }
+      } catch (err) {
+        // Fallback local scheduler
+        const openHours = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+        let count = 0;
+        state.tasks.forEach(t => {
+          if (!t.scheduled_time && t.status !== 'done' && openHours.length > 0) {
+            t.scheduled_time = openHours.shift();
+            count++;
+          }
+        });
+        alert(`⚡ Autonomous Scheduler (Local): Auto-slotted ${count} tasks.`);
+        renderAllViews();
+      }
+    }
+
+    // Document Tree
+    function renderDocumentTree() {
+      const container = document.getElementById('documentTreeContainer');
+      if (!container) return;
+      container.innerHTML = state.pages.length === 0
+        ? '<div class="text-slate-400 p-2 text-center">No documents yet.</div>'
+        : renderTreeNodes(state.pages, 0);
+      renderActiveDocument();
+    }
+
+    function renderTreeNodes(nodes, depth = 0) {
+      return nodes.map(node => {
+        const isActive = node.id === state.activePageId;
+        const indent = depth * 14;
+        return `
+          <div>
+            <div 
+              style="padding-left: ${indent + 8}px"
+              class="py-1.5 px-2.5 rounded-lg flex items-center justify-between cursor-pointer text-xs transition-all ${isActive ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-700 hover:bg-slate-50'}"
+              onclick="selectDocument('${node.id}')"
+            >
+              <span class="truncate max-w-[160px]">
+                ${depth > 0 ? '↳ ' : '📄 '}${escapeHtml(node.title)}
+              </span>
+              <div class="flex items-center gap-1 text-[11px]">
+                <button onclick="event.stopPropagation(); createNewDocument('${node.id}')" title="Add Subpage" class="text-blue-600 hover:text-blue-800 px-1 font-bold">+</button>
+                <button onclick="event.stopPropagation(); deleteDocument('${node.id}')" title="Delete Page" class="text-slate-400 hover:text-red-500 px-1">✕</button>
+              </div>
+            </div>
+            ${node.children && node.children.length > 0 ? renderTreeNodes(node.children, depth + 1) : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function findPageById(pages, id) {
+      for (const p of pages) {
+        if (p.id === id) return p;
+        if (p.children && p.children.length > 0) {
+          const found = findPageById(p.children, id);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+
+    function selectDocument(id) {
+      state.activePageId = id;
+      renderDocumentTree();
+    }
+
+    function renderActiveDocument() {
+      const activeDoc = findPageById(state.pages, state.activePageId);
+      const titleInput = document.getElementById('docTitleInput');
+      const contentText = document.getElementById('docContentTextarea');
+      const breadcrumb = document.getElementById('docBreadcrumb');
+      const preview = document.getElementById('docRenderedOutput');
+
+      if (!activeDoc) return;
+      if (titleInput) titleInput.value = activeDoc.title;
+      if (contentText) contentText.value = activeDoc.content;
+      if (breadcrumb) breadcrumb.textContent = `Workspace / ${activeDoc.title}`;
+      if (preview) {
+        try {
+          preview.innerHTML = marked.parse(activeDoc.content || '*Empty page. Start writing above.*');
+        } catch (e) {
+          preview.textContent = activeDoc.content;
+        }
+      }
+    }
+
+    function handleDocTitleChange() {
+      const activeDoc = findPageById(state.pages, state.activePageId);
+      if (activeDoc) activeDoc.title = document.getElementById('docTitleInput').value;
+    }
+
+    function handleDocContentChange() {
+      const activeDoc = findPageById(state.pages, state.activePageId);
+      if (activeDoc) {
+        activeDoc.content = document.getElementById('docContentTextarea').value;
+        const preview = document.getElementById('docRenderedOutput');
+        if (preview) preview.innerHTML = marked.parse(activeDoc.content);
+      }
+    }
+
+    async function saveActiveDocument() {
+      const activeDoc = findPageById(state.pages, state.activePageId);
+      if (!activeDoc) return;
+      try {
+        await fetch(`${API_BASE}/api/pages/${activeDoc.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: activeDoc.title, content: activeDoc.content })
+        });
+        alert('Document saved successfully.');
+      } catch (e) {
+        alert('Document saved locally.');
+      }
+      renderDocumentTree();
+    }
+
+    async function createNewDocument(parentId = null) {
+      const title = prompt('Enter page title:', 'Untitled Document');
+      if (!title) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/pages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content: '# ' + title + '\n\n', parent_id: parentId })
+        });
+        if (res.ok) {
+          const created = await res.json();
+          await fetchPages();
+          state.activePageId = created.id;
+          renderDocumentTree();
+        }
+      } catch (e) {
+        const localDoc = { id: 'page_' + Math.random().toString(36).substr(2, 6), title, content: '# ' + title, parent_id: parentId, children: [] };
+        state.pages.push(localDoc);
+        state.activePageId = localDoc.id;
+        renderDocumentTree();
+      }
+    }
+
+    async function deleteDocument(pageId) {
+      if (!confirm('Delete this page and its subpages?')) return;
+      try {
+        await fetch(`${API_BASE}/api/pages/${pageId}`, { method: 'DELETE' });
+        await fetchPages();
+      } catch (e) {
+        state.pages = state.pages.filter(p => p.id !== pageId);
+      }
+      if (state.activePageId === pageId) {
+        state.activePageId = state.pages.length > 0 ? state.pages[0].id : null;
+      }
+      renderDocumentTree();
+    }
+
+    function setDocEditorMode(mode) {
+      state.activeDocEditorMode = mode;
+      const writePane = document.getElementById('docWritePane');
+      const previewPane = document.getElementById('docPreviewPane');
+
+      ['split', 'edit', 'preview'].forEach(m => {
+        const btn = document.getElementById(`docTab-${m}`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = "px-2.5 py-1 rounded-md bg-white text-blue-600 font-bold shadow-sm";
+          } else {
+            btn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+          }
+        }
+      });
+
+      if (mode === 'split') {
+        writePane.classList.remove('hidden');
+        previewPane.classList.remove('hidden');
+      } else if (mode === 'edit') {
+        writePane.classList.remove('hidden');
+        previewPane.classList.add('hidden');
+      } else {
+        writePane.classList.add('hidden');
+        previewPane.classList.remove('hidden');
+      }
+    }
+
+    // Pomodoro Focus Engine
+    function launchFocusEngine(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      state.focusActiveTask = task;
+      state.focusDurationSeconds = 25 * 60;
+      state.focusTimeRemaining = 25 * 60;
+      state.focusIsRunning = false;
+      clearInterval(state.focusTimerInterval);
+
+      document.getElementById('focusTaskTitle').textContent = task.title;
+      document.getElementById('focusTaskTag').textContent = `#${task.tag}`;
+      document.getElementById('focusTaskPriority').textContent = task.priority;
+      document.getElementById('focusTimerDisplay').textContent = '25:00';
+      document.getElementById('focusTimerState').textContent = 'Ready';
+      document.getElementById('focusToggleBtn').textContent = 'Start Timer';
+      document.getElementById('focusModal').classList.remove('hidden');
+    }
+
+    function exitFocusEngine() {
+      clearInterval(state.focusTimerInterval);
+      state.focusIsRunning = false;
+      document.getElementById('focusModal').classList.add('hidden');
+    }
+
+    function toggleFocusTimer() {
+      const btn = document.getElementById('focusToggleBtn');
+      const stateEl = document.getElementById('focusTimerState');
+
+      if (state.focusIsRunning) {
+        clearInterval(state.focusTimerInterval);
+        state.focusIsRunning = false;
+        btn.textContent = 'Resume Timer';
+        stateEl.textContent = 'Paused';
+      } else {
+        state.focusIsRunning = true;
+        btn.textContent = 'Pause Timer';
+        stateEl.textContent = 'Deep Work Active';
+        state.focusTimerInterval = setInterval(tickFocusTimer, 1000);
+      }
+    }
+
+    function tickFocusTimer() {
+      if (state.focusTimeRemaining > 0) {
+        state.focusTimeRemaining--;
+        const m = Math.floor(state.focusTimeRemaining / 60);
+        const s = state.focusTimeRemaining % 60;
+        document.getElementById('focusTimerDisplay').textContent = 
+          `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      } else {
+        clearInterval(state.focusTimerInterval);
+        state.focusIsRunning = false;
+        document.getElementById('focusTimerState').textContent = 'Session Complete!';
+        alert('⚡ Pomodoro Completed! 25 minutes of deep execution logged.');
+      }
+    }
+
+    function resetFocusTimer() {
+      clearInterval(state.focusTimerInterval);
+      state.focusIsRunning = false;
+      state.focusTimeRemaining = 25 * 60;
+      document.getElementById('focusTimerDisplay').textContent = '25:00';
+      document.getElementById('focusTimerState').textContent = 'Reset';
+      document.getElementById('focusToggleBtn').textContent = 'Start Timer';
+    }
+
+    function addFiveMinutesFocus() {
+      state.focusTimeRemaining += 300;
+      const m = Math.floor(state.focusTimeRemaining / 60);
+      const s = state.focusTimeRemaining % 60;
+      document.getElementById('focusTimerDisplay').textContent = 
+        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    async function completeFocusTask() {
+      if (state.focusActiveTask) {
+        await updateTaskStatus(state.focusActiveTask.id, 'done');
+        exitFocusEngine();
+        renderAllViews();
+      }
+    }
+
+    // Task Capture Handlers
+    async function handleMasterSubmit() {
+      const text = masterInput.value.trim();
+      if (!text) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/quick-capture`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        if (res.ok) {
+          masterInput.value = '';
+          telemetryContent.textContent = 'Task scheduled successfully!';
+          await fetchTasks();
+          renderAllViews();
+        }
+      } catch (e) {
+        const parsed = parseNaturalLanguageClient(text);
+        state.tasks.push({
+          id: 'task_' + Math.random().toString(36).substr(2, 6),
+          title: parsed.title,
+          status: 'todo',
+          tag: parsed.tag,
+          scheduled_time: parsed.scheduled_time,
+          duration_minutes: parsed.duration_minutes,
+          priority: parsed.priority,
+          proof_notes: '',
+          created_at: new Date().toISOString()
+        });
+        masterInput.value = '';
+        renderAllViews();
+      }
+    }
+
+    function openQuickCapture() {
+      document.getElementById('quickCaptureModal').classList.remove('hidden');
+      const input = document.getElementById('quickCaptureInput');
+      input.value = '';
+      document.getElementById('quickCapturePreview').textContent = 'Parser standby...';
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeQuickCapture() {
+      document.getElementById('quickCaptureModal').classList.add('hidden');
+    }
+
+    async function handleQuickCaptureSubmit() {
+      const text = quickInput.value.trim();
+      if (!text) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/quick-capture`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        if (res.ok) {
+          closeQuickCapture();
+          await fetchTasks();
+          renderAllViews();
+        }
+      } catch (e) {
+        const parsed = parseNaturalLanguageClient(text);
+        state.tasks.push({
+          id: 'task_' + Math.random().toString(36).substr(2, 6),
+          title: parsed.title,
+          status: 'todo',
+          tag: parsed.tag,
+          scheduled_time: parsed.scheduled_time,
+          duration_minutes: parsed.duration_minutes,
+          priority: parsed.priority,
+          proof_notes: '',
+          created_at: new Date().toISOString()
+        });
+        closeQuickCapture();
+        renderAllViews();
+      }
+    }
+
+    async function advanceTaskStatus(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      const order = ['todo', 'in_progress', 'done'];
+      const next = order[(order.indexOf(task.status) + 1) % order.length];
+      await updateTaskStatus(taskId, next);
+    }
+
+    async function updateTaskStatus(taskId, newStatus) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task) task.status = newStatus;
+      try {
+        await fetch(`${API_BASE}/api/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+      } catch (e) {}
+      renderAllViews();
+    }
+
+    async function deleteTaskRecord(taskId) {
+      if (!confirm('Delete this task record?')) return;
+      try {
+        await fetch(`${API_BASE}/api/tasks/${taskId}`, { method: 'DELETE' });
+      } catch (e) {}
+      state.tasks = state.tasks.filter(t => t.id !== taskId);
+      renderAllViews();
+    }
+
+    function openNewTaskModal() {
+      document.getElementById('taskFormId').value = '';
+      document.getElementById('taskFormTitle').value = '';
+      document.getElementById('taskFormTag').value = 'dev';
+      document.getElementById('taskFormTime').value = '';
+      document.getElementById('taskFormStatus').value = 'todo';
+      document.getElementById('taskFormPriority').value = 'P2';
+      document.getElementById('taskFormProof').value = '';
+      document.getElementById('taskModal').classList.remove('hidden');
+    }
+
+    function openEditTaskModal(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) return;
+      document.getElementById('taskFormId').value = task.id;
+      document.getElementById('taskFormTitle').value = task.title;
+      document.getElementById('taskFormTag').value = task.tag;
+      document.getElementById('taskFormTime').value = task.scheduled_time || '';
+      document.getElementById('taskFormStatus').value = task.status;
+      document.getElementById('taskFormPriority').value = task.priority;
+      document.getElementById('taskFormProof').value = task.proof_notes || '';
+      document.getElementById('taskModal').classList.remove('hidden');
+    }
+
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    async function handleTaskFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('taskFormId').value;
+      const payload = {
+        title: document.getElementById('taskFormTitle').value,
+        tag: document.getElementById('taskFormTag').value,
+        scheduled_time: document.getElementById('taskFormTime').value || null,
+        status: document.getElementById('taskFormStatus').value,
+        priority: document.getElementById('taskFormPriority').value,
+        proof_notes: document.getElementById('taskFormProof').value
+      };
+
+      if (id) {
+        await fetch(`${API_BASE}/api/tasks/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        await fetch(`${API_BASE}/api/tasks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      closeTaskModal();
+      await fetchTasks();
+      renderAllViews();
+    }
+
+    function promptEditProof(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      const proof = prompt('Log completion proof / link / evidence:', task.proof_notes || '');
+      if (proof !== null) {
+        task.proof_notes = proof;
+        fetch(`${API_BASE}/api/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ proof_notes: proof })
+        });
+        renderAllViews();
+      }
+    }
+
+    function switchAppView(viewName) {
+      state.appView = viewName;
+      ['dynamic', 'database', 'timeline', 'documents'].forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const tab = document.getElementById(`navTab-${v}`);
+        if (el) el.classList.toggle('hidden', v !== viewName);
+        if (tab) {
+          if (v === viewName) {
+            tab.className = "py-3 px-4 text-blue-600 border-b-2 border-blue-600 font-bold flex items-center gap-2 transition-all";
+          } else {
+            tab.className = "py-3 px-4 text-slate-600 hover:text-slate-900 border-b-2 border-transparent transition-all";
+          }
+        }
+      });
+      renderAllViews();
+    }
+
+    function renderAllViews() {
+      renderDynamicView();
+      renderDatabaseView();
+      renderTimelineGrid();
+      renderDocumentTree();
+    }
+
+    function startClock() {
+      const clockEl = document.getElementById('systemClock');
+      function update() {
+        clockEl.textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
+      }
+      setInterval(update, 1000);
+      update();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
